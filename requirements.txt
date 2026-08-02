@@ -1,0 +1,7 @@
+beautifulsoup4==4.12.3
+chromadb==0.4.22
+fastapi==0.110.0
+sentence-transformers==2.6.1
+uvicorn==0.27.1
+openai==2.52.0
+python-dotenv==1.0.1

@@ -1,10 +1,10 @@
 import re
 from pathlib import Path
 from bs4 import BeautifulSoup
-from config import (
-    db, model, CHUNK_SIZE, CHUNK_OVERLAP,
-    COLLECTION_NAME, INGEST_BATCH_SIZE,
-)
+
+from config import CHUNK_SIZE, CHUNK_OVERLAP, INGEST_BATCH_SIZE
+from embeddings import embed_documents
+from store import get_collection
 
 
 def parse_document(file_path: str) -> str:
@@ -23,8 +23,14 @@ def chunk_text(text: str, chunk_size: int = CHUNK_SIZE,
     """Split text into overlapping fixed-size chunks."""
     chunks = []
     start = 0
-    while start < len(text):
-        chunk = text[start: start + chunk_size].strip()
+    text_len = len(text)
+    while start < text_len:
+        end = start + chunk_size
+        if end < text_len:
+            snapped = text.rfind(" ", start, end)
+            if snapped > start:
+                end = snapped
+        chunk = text[start:end].strip()
         if chunk:
             chunks.append(chunk)
         start += chunk_size - overlap
@@ -35,20 +41,15 @@ def ingest(file_path: str, metadata: dict) -> dict:
     """Full ingestion pipeline: parse → chunk → embed → store."""
     text = parse_document(file_path)
     chunks = chunk_text(text)
+    embeddings = embed_documents(chunks)
 
-    embeddings = model.encode(
-        chunks,
-        show_progress_bar=False,
-        batch_size=32,
-    ).tolist()
-
-    collection = db.get_or_create_collection(COLLECTION_NAME)
+    collection = get_collection()
 
     doc_id = metadata.get("deal_id", Path(file_path).stem)
     ids = [f"{doc_id}_{i}" for i in range(len(chunks))]
     metadatas = [{**metadata, "chunk_index": i} for i in range(len(chunks))]
 
-    # ChromaDB 0.4.x limits each add() to 166 items — batch accordingly
+    # ChromaDB 0.4.x limits each add() to ~166 items — batch accordingly
     for i in range(0, len(chunks), INGEST_BATCH_SIZE):
         end = i + INGEST_BATCH_SIZE
         collection.add(
@@ -65,8 +66,7 @@ def ingest(file_path: str, metadata: dict) -> dict:
     }
 
 
-
-#preload 
+# preload
 if __name__ == "__main__":
     docs = [
         {

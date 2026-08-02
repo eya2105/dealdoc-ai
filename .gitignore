@@ -1,4 +1,8 @@
 .env
 chroma_deals/
+uploads/
 __pycache__/
 myenv/
+*.pyc
+.vscode/
+.idea/

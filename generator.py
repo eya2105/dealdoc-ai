@@ -1,6 +1,5 @@
-import json
-import config
-from config import LLM_MODEL, LLM_TEMPERATURE
+from config import LLM_TEMPERATURE
+from llm import call_llm_json, call_llm_text
 
 SYSTEM_PROMPT = """You are an M&A deal analyst assistant. You help investment bankers, 
 PE professionals, and corporate M&A teams find information in deal documents.
@@ -19,44 +18,26 @@ def generate_answer(question: str, contexts: list[str]) -> str:
     formatted_context = "\n\n".join(
         f"[Source {i+1}]: {ctx}" for i, ctx in enumerate(contexts)
     )
-
-    response = config.llm_client.chat.completions.create(
-        model=LLM_MODEL,
-        temperature=LLM_TEMPERATURE,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": f"""DOCUMENT EXCERPTS:
+    user_prompt = f"""DOCUMENT EXCERPTS:
 {formatted_context}
 
 QUESTION: {question}
 
-ANSWER:"""},
-        ],
-    )
-    return response.choices[0].message.content
+ANSWER:"""
+    return call_llm_text(SYSTEM_PROMPT, user_prompt, temperature=LLM_TEMPERATURE)
 
 
 def extract_structured(doc_chunks: list[str],
-                       fields: list[str],
-                       max_chunks: int = 15) -> dict:
-    """Extract specific deal fields from document chunks as JSON."""
+                        fields: list[str],
+                        max_chunks: int = 15) -> dict:
+    """Extract specific deal fields from document chunks as JSON. """
     context = "\n\n".join(doc_chunks[:max_chunks])
+    system_prompt = f"""You extract structured data from M&A documents.
+    Extract these fields: {', '.join(fields)}
+    Return ONLY a valid JSON object. Use null for missing fields.
+    Use the exact values found in the document — do not estimate."""
 
-    response = config.llm_client.chat.completions.create(
-        model=LLM_MODEL,
-        temperature=0.0,
-        response_format={"type": "json_object"},
-        messages=[
-            {"role": "system", "content": f"""You extract structured data from M&A documents.
-Extract these fields: {', '.join(fields)}
-Return ONLY a valid JSON object. Use null for missing fields.
-Use the exact values found in the document — do not estimate."""},
-            {"role": "user", "content": context},
-        ],
-    )
-
-    try:
-        return json.loads(response.choices[0].message.content)
-    except json.JSONDecodeError:
-        return {"error": "Failed to parse extraction",
-                "raw": response.choices[0].message.content}
+    data = call_llm_json(system_prompt, context, temperature=0.0)
+    if data is None:
+        return {"error": "Failed to get a valid JSON extraction from the LLM"}
+    return data

@@ -1,11 +1,6 @@
 import json
-import config  # ensure .env is loaded before OpenAI client
-from openai import OpenAI
-
-client = OpenAI(
-    base_url="https://api.groq.com/openai/v1",
-    api_key=config.GROQ_API_KEY,
-)
+import config
+from config import LLM_MODEL, LLM_TEMPERATURE
 
 SYSTEM_PROMPT = """You are an M&A deal analyst assistant. You help investment bankers, 
 PE professionals, and corporate M&A teams find information in deal documents.
@@ -25,9 +20,9 @@ def generate_answer(question: str, contexts: list[str]) -> str:
         f"[Source {i+1}]: {ctx}" for i, ctx in enumerate(contexts)
     )
 
-    response = client.chat.completions.create(
-        model=config.LLM_MODEL,
-        temperature=config.LLM_TEMPERATURE,
+    response = config.llm_client.chat.completions.create(
+        model=LLM_MODEL,
+        temperature=LLM_TEMPERATURE,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": f"""DOCUMENT EXCERPTS:
@@ -47,8 +42,8 @@ def extract_structured(doc_chunks: list[str],
     """Extract specific deal fields from document chunks as JSON."""
     context = "\n\n".join(doc_chunks[:max_chunks])
 
-    response = client.chat.completions.create(
-        model=config.LLM_MODEL,
+    response = config.llm_client.chat.completions.create(
+        model=LLM_MODEL,
         temperature=0.0,
         response_format={"type": "json_object"},
         messages=[

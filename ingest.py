@@ -81,5 +81,9 @@ if __name__ == "__main__":
         },
     ]
     for doc in docs:
-        result = ingest(doc["path"], {"deal_id": doc["deal_id"], "deal_type": doc["deal_type"]})
+        result = ingest(doc["path"], {
+            "deal_id": doc["deal_id"],
+            "deal_type": doc["deal_type"],
+            "source_file": Path(doc["path"]).name,
+        })
         print(f"Ingested {result['total_chunks']} chunks for {result['deal_id']}")

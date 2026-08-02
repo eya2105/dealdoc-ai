@@ -64,10 +64,14 @@ async def ingest_document(
     deal_id: Optional[str] = Query(None),
     deal_type: Optional[str] = Query(None),
 ):
+    content = await file.read()
+    if len(content) > config.MAX_UPLOAD_SIZE:
+        raise HTTPException(413, f"File too large. Max {config.MAX_UPLOAD_SIZE // (1024*1024)}MB")
+
     save_path = Path(config.UPLOAD_PATH) / file.filename
     save_path.parent.mkdir(exist_ok=True)
     with open(save_path, "wb") as f:
-        f.write(await file.read())
+        f.write(content)
 
     metadata = {
         "deal_id": deal_id or save_path.stem,

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DealDoc AI</title>
+    <style>
+        /* ── Reset & Variables ─────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:       #09090b;
+            --surface:  #18181b;
+            --border:   #27272a;
+            --text:     #e4e4e7;
+            --muted:    #71717a;
+            --accent:   #3b82f6;
+            --accent-h: #2563eb;
+            --success:  #22c55e;
+            --error:    #ef4444;
+            --radius:   8px;
+            --font:     'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ── Header ─────────────────────────────────────────── */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 32px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .health-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .health-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--muted);
+        }
+
+        .health-dot.ok { background: var(--success); }
+        .health-dot.err { background: var(--error); }
+
+        /* ── Tabs ───────────────────────────────────────────── */
+        nav {
+            display: flex;
+            gap: 0;
+            padding: 0 32px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .tab {
+            padding: 12px 20px;
+            font-size: 14px;
+            color: var(--muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            font-family: var(--font);
+        }
+
+        .tab:hover { color: var(--text); }
+        .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        /* ── Main ───────────────────────────────────────────── */
+        main {
+            max-width: 900px;
+            margin: 32px auto;
+            padding: 0 32px;
+        }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* ── Cards ──────────────────────────────────────────── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        /* ── Form Elements ──────────────────────────────────── */
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-size: 14px;
+            font-family: var(--font);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        textarea { resize: vertical; min-height: 80px; }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group { flex: 1; }
+
+        /* ── Button ─────────────────────────────────────────── */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: var(--font);
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover { background: var(--accent-h); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ── File Input ─────────────────────────────────────── */
+        .file-drop {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+            color: var(--muted);
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .file-drop:hover { border-color: var(--accent); }
+        .file-drop input { display: none; }
+        .file-drop p { margin-top: 8px; font-size: 13px; }
+
+        /* ── Results ────────────────────────────────────────── */
+        .result {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-top: 16px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 14px;
+            line-height: 1.7;
+            display: none;
+        }
+
+        .result.visible { display: block; }
+
+        .result-error {
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        /* ── Source Cards ───────────────────────────────────── */
+        .sources { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+
+        .source-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+        }
+
+        .source-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .source-chunk {
+            font-size: 12px;
+            color: var(--muted);
+            font-family: monospace;
+        }
+
+        .source-score {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--accent);
+        }
+
+        .source-text {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* ── Document List ──────────────────────────────────── */
+        .doc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .doc-item:last-child { border-bottom: none; }
+
+        .doc-name { font-weight: 500; }
+        .doc-meta { font-size: 13px; color: var(--muted); }
+        .doc-type {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            background: var(--bg);
+            color: var(--accent);
+            border: 1px solid var(--border);
+        }
+
+        /* ── JSON Display ───────────────────────────────────── */
+        .json-display {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-top: 16px;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            display: none;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .json-display.visible { display: block; }
+
+        /* ── Loading ────────────────────────────────────────── */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 24px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .loading.visible { display: block; }
+
+        /* ── Empty State ────────────────────────────────────── */
+        .empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">DealDoc <span>AI</span></div>
+        <div class="health-badge">
+            <div class="health-dot" id="healthDot"></div>
+            <span id="healthText">Checking...</span>
+        </div>
+    </header>
+
+    <!-- Tabs -->
+    <nav>
+        <button class="tab active" data-tab="query">Query</button>
+        <button class="tab" data-tab="extract">Extract</button>
+        <button class="tab" data-tab="documents">Documents</button>
+        <button class="tab" data-tab="ingest">Ingest</button>
+    </nav>
+
+    <main>
+
+        <!-- Query Section -->
+        <div class="section active" id="sec-query">
+            <div class="card">
+                <div class="card-title">Ask a Question</div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <textarea id="queryQuestion" placeholder="e.g. What is the purchase price per share?" rows="2"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Deal (optional)</label>
+                        <select id="queryDealId">
+                            <option value="">All documents</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="max-width: 120px;">
+                        <label>Top K</label>
+                        <input type="number" id="queryTopK" value="5" min="1" max="20">
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="btnQuery">Search</button>
+            </div>
+
+            <div class="loading" id="queryLoading">Retrieving and generating answer...</div>
+
+            <div class="card" id="queryAnswerCard" style="display: none;">
+                <div class="card-title">Answer</div>
+                <div id="queryAnswer"></div>
+            </div>
+
+            <div id="querySources" class="sources"></div>
+
+            <div class="result" id="queryError"></div>
+        </div>
+
+        <!-- Extract Section -->
+        <div class="section" id="sec-extract">
+            <div class="card">
+                <div class="card-title">Extract Structured Data</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Deal</label>
+                        <select id="extractDealId"></select>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label>Fields (comma-separated)</label>
+                    <input type="text" id="extractFields" value="deal_value, buyer, target, announcement_date, deal_type, industry, advisors, key_conditions, timeline">
+                </div>
+                <button class="btn btn-primary" id="btnExtract">Extract</button>
+            </div>
+
+            <div class="loading" id="extractLoading">Extracting deal terms...</div>
+            <div class="json-display" id="extractResult"></div>
+            <div class="result" id="extractError"></div>
+        </div>
+
+        <!-- Documents Section -->
+        <div class="section" id="sec-documents">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <div class="card-title" style="margin-bottom: 0;">Indexed Documents</div>
+                    <button class="btn btn-primary" id="btnRefreshDocs" style="padding: 6px 14px; font-size: 13px;">Refresh</button>
+                </div>
+                <div id="docList"></div>
+            </div>
+        </div>
+
+        <!-- Ingest Section -->
+        <div class="section" id="sec-ingest">
+            <div class="card">
+                <div class="card-title">Upload Document</div>
+                <div class="file-drop" id="fileDrop">
+                    <input type="file" id="fileInput" accept=".html,.htm,.txt,.pdf">
+                    <p id="fileLabel">Click or drop an HTML file here</p>
+                </div>
+                <div class="form-row" style="margin-top: 16px;">
+                    <div class="form-group">
+                        <label>Deal ID</label>
+                        <input type="text" id="ingestDealId" placeholder="e.g. msft_activision_merger">
+                    </div>
+                    <div class="form-group">
+                        <label>Deal Type</label>
+                        <select id="ingestDealType">
+                            <option value="merger_agreement">Merger Agreement</option>
+                            <option value="proxy_statement">Proxy Statement</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="btnIngest">Upload & Ingest</button>
+            </div>
+
+            <div class="loading" id="ingestLoading">Processing document...</div>
+            <div class="json-display" id="ingestResult"></div>
+            <div class="result" id="ingestError"></div>
+        </div>
+
+    </main>
+
+    <script>
+        /* ── Config ──────────────────────────────────────────── */
+        const API = "http://localhost:8000";
+
+        /* ── API Calls ───────────────────────────────────────── */
+        async function apiGet(path) {
+            const res = await fetch(`${API}${path}`);
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        }
+
+        async function apiPost(path, body) {
+            const res = await fetch(`${API}${path}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+            });
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        }
+
+        async function apiUpload(path, formData) {
+            const res = await fetch(`${API}${path}`, {
+                method: "POST",
+                body: formData,
+            });
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        }
+
+        /* ── Health Check ─────────────────────────────────────── */
+        async function checkHealth() {
+            const dot = document.getElementById("healthDot");
+            const text = document.getElementById("healthText");
+            try {
+                await apiGet("/health");
+                dot.className = "health-dot ok";
+                text.textContent = "Connected";
+            } catch {
+                dot.className = "health-dot err";
+                text.textContent = "Disconnected";
+            }
+        }
+
+        /* ── Documents ────────────────────────────────────────── */
+        async function loadDocuments() {
+            const container = document.getElementById("docList");
+            try {
+                const data = await apiGet("/documents");
+                if (data.total === 0) {
+                    container.innerHTML = '<div class="empty">No documents indexed yet.</div>';
+                    return;
+                }
+                container.innerHTML = data.documents.map(doc => `
+                    <div class="doc-item">
+                        <div>
+                            <div class="doc-name">${doc.deal_id}</div>
+                            <div class="doc-meta">${doc.source_file}</div>
+                        </div>
+                        <span class="doc-type">${doc.deal_type}</span>
+                    </div>
+                `).join("");
+                populateDealDropdowns(data.documents);
+            } catch (e) {
+                container.innerHTML = `<div class="result result-error visible">${e.message}</div>`;
+            }
+        }
+
+        function populateDealDropdowns(documents) {
+            const options = documents.map(d => `<option value="${d.deal_id}">${d.deal_id}</option>`).join("");
+            const allOption = '<option value="">All documents</option>';
+            document.getElementById("queryDealId").innerHTML = allOption + options;
+            document.getElementById("extractDealId").innerHTML = options;
+        }
+
+        /* ── Query ───────────────────────────────────────────── */
+        async function handleQuery() {
+            const question = document.getElementById("queryQuestion").value.trim();
+            if (!question) return;
+
+            const dealId = document.getElementById("queryDealId").value || null;
+            const topK = parseInt(document.getElementById("queryTopK").value) || 5;
+
+            show("queryLoading"); hide("queryError"); hide("queryAnswerCard"); hide("querySources");
+
+            try {
+                const data = await apiPost("/query", { question, top_k: topK, deal_id: dealId });
+                document.getElementById("queryAnswer").innerHTML = data.answer;
+                show("queryAnswerCard");
+
+                document.getElementById("querySources").innerHTML = data.sources.map(s => `
+                    <div class="source-card">
+                        <div class="source-header">
+                            <span class="source-chunk">${s.chunk_id}</span>
+                            <span class="source-score">${s.score}</span>
+                        </div>
+                        <div class="source-text">${s.text_preview}</div>
+                    </div>
+                `).join("");
+            } catch (e) {
+                showError("queryError", e.message);
+            } finally {
+                hide("queryLoading");
+            }
+        }
+
+        /* ── Extract ─────────────────────────────────────────── */
+        async function handleExtract() {
+            const dealId = document.getElementById("extractDealId").value;
+            const fieldsRaw = document.getElementById("extractFields").value;
+            const fields = fieldsRaw.split(",").map(f => f.trim()).filter(Boolean);
+
+            if (!dealId) return;
+
+            show("extractLoading"); hide("extractError"); hide("extractResult");
+
+            try {
+                const data = await apiPost("/extract", { deal_id: dealId, fields });
+                document.getElementById("extractResult").textContent = JSON.stringify(data, null, 2);
+                show("extractResult");
+            } catch (e) {
+                showError("extractError", e.message);
+            } finally {
+                hide("extractLoading");
+            }
+        }
+
+        /* ── Ingest ──────────────────────────────────────────── */
+        async function handleIngest() {
+            const fileInput = document.getElementById("fileInput");
+            if (!fileInput.files.length) return;
+
+            const dealId = document.getElementById("ingestDealId").value;
+            const dealType = document.getElementById("ingestDealType").value;
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+            if (dealId) formData.append("deal_id", dealId);
+            formData.append("deal_type", dealType);
+
+            show("ingestLoading"); hide("ingestError"); hide("ingestResult");
+
+            try {
+                const data = await apiUpload(`/ingest?deal_type=${dealType}${dealId ? "&deal_id=" + dealId : ""}`, formData);
+                document.getElementById("ingestResult").textContent = JSON.stringify(data, null, 2);
+                show("ingestResult");
+                loadDocuments();
+            } catch (e) {
+                showError("ingestError", e.message);
+            } finally {
+                hide("ingestLoading");
+            }
+        }
+
+        /* ── Helpers ─────────────────────────────────────────── */
+        function show(id) { document.getElementById(id).classList.add("visible"); }
+        function hide(id) { document.getElementById(id).classList.remove("visible"); }
+        function showError(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add("visible", "result-error");
+        }
+
+        /* ── Tab Switching ────────────────────────────────────── */
+        document.querySelectorAll(".tab").forEach(tab => {
+            tab.addEventListener("click", () => {
+                document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+                document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+                tab.classList.add("active");
+                document.getElementById(`sec-${tab.dataset.tab}`).classList.add("active");
+            });
+        });
+
+        /* ── File Drop ────────────────────────────────────────── */
+        const fileDrop = document.getElementById("fileDrop");
+        const fileInput = document.getElementById("fileInput");
+
+        fileDrop.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", () => {
+            document.getElementById("fileLabel").textContent = fileInput.files[0]?.name || "Click or drop an HTML file here";
+        });
+
+        /* ── Event Listeners ──────────────────────────────────── */
+        document.getElementById("btnQuery").addEventListener("click", handleQuery);
+        document.getElementById("btnExtract").addEventListener("click", handleExtract);
+        document.getElementById("btnIngest").addEventListener("click", handleIngest);
+        document.getElementById("btnRefreshDocs").addEventListener("click", loadDocuments);
+
+        document.getElementById("queryQuestion").addEventListener("keydown", e => {
+            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleQuery(); }
+        });
+
+        /* ── Init ─────────────────────────────────────────────── */
+        checkHealth();
+        loadDocuments();
+    </script>
+
+</body>
+</html>

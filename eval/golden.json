@@ -1,0 +1,199 @@
+[
+  {
+    "id": "price_per_share",
+    "category": "numeric",
+    "deal_id": "msft_activision",
+    "question": "What is the merger consideration paid per share of Activision Blizzard common stock?",
+    "must_contain": "95.00 in cash, without interest"
+  },
+  {
+    "id": "company_termination_fee",
+    "category": "numeric",
+    "deal_id": "msft_activision",
+    "question": "What is the Company Termination Fee that Activision Blizzard may have to pay Microsoft?",
+    "must_contain": "2,270,100,000"
+  },
+  {
+    "id": "parent_fee_max",
+    "category": "numeric",
+    "deal_id": "msft_activision",
+    "question": "How much is the Parent Termination Fee if the termination notice is given after April 18, 2023?",
+    "must_contain": "$3,000,000,000"
+  },
+  {
+    "id": "parent_fee_min",
+    "category": "numeric",
+    "deal_id": "msft_activision",
+    "question": "What Parent Termination Fee applies if the termination notice is provided before January 18, 2023?",
+    "must_contain": "$2,000,000,000"
+  },
+  {
+    "id": "advisor_fee",
+    "category": "numeric",
+    "deal_id": "msft_activision",
+    "question": "What fee will Activision Blizzard pay Allen & Company for its services as financial advisor?",
+    "must_contain": "$65 million",
+    "expected_doc": "proxy_statement"
+  },
+  {
+    "id": "premium",
+    "category": "numeric",
+    "deal_id": "msft_activision",
+    "question": "What premium does the per share merger consideration represent over the closing stock price before announcement?",
+    "must_contain": "45.3%",
+    "expected_doc": "proxy_statement"
+  },
+  {
+    "id": "outside_date",
+    "category": "date",
+    "deal_id": "msft_activision",
+    "question": "What is the Initial Termination Date after which either party may terminate the agreement?",
+    "must_contain": "January 18, 2023"
+  },
+  {
+    "id": "meeting_date",
+    "category": "date",
+    "deal_id": "msft_activision",
+    "question": "When is the special meeting of Activision Blizzard stockholders to vote on the merger?",
+    "must_contain": "April 28, 2022",
+    "expected_doc": "proxy_statement"
+  },
+  {
+    "id": "record_date",
+    "category": "date",
+    "deal_id": "msft_activision",
+    "question": "Which stockholders are entitled to vote at the special meeting, and what is the record date?",
+    "must_contain": "March 14, 2022",
+    "expected_doc": "proxy_statement"
+  },
+  {
+    "id": "financial_advisor",
+    "category": "entity",
+    "deal_id": "msft_activision",
+    "question": "Who is Activision Blizzard's financial advisor for the merger?",
+    "must_contain": "engaged Allen & Company as financial advisor"
+  },
+  {
+    "id": "merger_sub",
+    "category": "entity",
+    "deal_id": "msft_activision",
+    "question": "Which entity is the merger subsidiary that merges with Activision Blizzard?",
+    "must_contain": "Anchorage Merger Sub Inc."
+  },
+  {
+    "id": "antitrust_act",
+    "category": "entity",
+    "deal_id": "msft_activision",
+    "question": "Which US antitrust law waiting period must expire before the merger can close?",
+    "must_contain": "Hart-Scott-Rodino"
+  },
+  {
+    "id": "no_shop",
+    "category": "clause",
+    "deal_id": "msft_activision",
+    "question": "What does the no solicitation clause forbid the Company from doing with competing acquisition proposals?",
+    "must_contain": "solicit, initiate, propose or induce the making",
+    "expected_doc": "merger_agreement"
+  },
+  {
+    "id": "superior_proposal",
+    "category": "clause",
+    "deal_id": "msft_activision",
+    "question": "How does the agreement define a Superior Proposal?",
+    "must_contain": "Superior Proposal means"
+  },
+  {
+    "id": "stockholder_vote",
+    "category": "clause",
+    "deal_id": "msft_activision",
+    "question": "What stockholder vote is required to adopt the merger agreement?",
+    "must_contain": "a majority of the outstanding shares"
+  },
+  {
+    "id": "financing_condition",
+    "category": "clause",
+    "deal_id": "msft_activision",
+    "question": "Is the merger conditioned on Microsoft obtaining financing?",
+    "must_contain": "The merger is not conditioned on",
+    "expected_doc": "proxy_statement"
+  },
+  {
+    "id": "governing_law",
+    "category": "clause",
+    "deal_id": "msft_activision",
+    "question": "Which jurisdiction's law governs the merger agreement and disputes arising from it?",
+    "must_contain": "internal Laws of the State of Delaware",
+    "expected_doc": "merger_agreement"
+  },
+  {
+    "id": "specific_performance",
+    "category": "clause",
+    "deal_id": "msft_activision",
+    "question": "Can a party obtain an injunction or specific performance to enforce the merger agreement?",
+    "must_contain": "the granting of an injunction, specific performance or other equitable relief",
+    "expected_doc": "merger_agreement"
+  },
+  {
+    "id": "board_determination",
+    "category": "clause",
+    "deal_id": "msft_activision",
+    "question": "What did the Activision Blizzard Board of Directors determine about the merger agreement?",
+    "must_contain": "determined that the terms of the merger agreement and the transactions contemplated thereby are advisable, fair to and in the best interests of Activision Blizzard",
+    "expected_doc": "proxy_statement"
+  },
+  {
+    "id": "appraisal_statute",
+    "category": "clause",
+    "deal_id": "msft_activision",
+    "question": "Under which Delaware statute can stockholders exercise appraisal rights?",
+    "must_contain": "Section 262 of the DGCL",
+    "expected_doc": "proxy_statement"
+  },
+  {
+    "id": "compensation_vote",
+    "category": "clause",
+    "deal_id": "msft_activision",
+    "question": "What vote is needed to approve the non-binding advisory merger-related compensation proposal?",
+    "must_contain": "to approve, by means of a non-binding, advisory vote, the merger-related compensation proposal",
+    "expected_doc": "proxy_statement"
+  },
+  {
+    "id": "proxy_solicitor",
+    "category": "entity",
+    "deal_id": "msft_activision",
+    "question": "Which firm is Activision Blizzard's proxy solicitor for the special meeting?",
+    "must_contain": "Innisfree M&A Incorporated",
+    "expected_doc": "proxy_statement"
+  },
+  {
+    "id": "ceo_signatory",
+    "category": "entity",
+    "deal_id": "msft_activision",
+    "question": "Who signed the letter to stockholders as Chief Executive Officer of Activision Blizzard?",
+    "must_contain": "Robert A. Kotick Chief Executive Officer",
+    "expected_doc": "proxy_statement"
+  },
+  {
+    "id": "chairman",
+    "category": "entity",
+    "deal_id": "msft_activision",
+    "question": "Who is the Chairman of the Board of Activision Blizzard?",
+    "must_contain": "Brian Kelly Chairman of the Board",
+    "expected_doc": "proxy_statement"
+  },
+  {
+    "id": "parent_company",
+    "category": "entity",
+    "deal_id": "msft_activision",
+    "question": "Which company is Parent in the merger agreement and where is it incorporated?",
+    "must_contain": "Microsoft Corporation, a Washington corporation"
+  },
+  {
+    "id": "former_executives",
+    "category": "entity",
+    "deal_id": "msft_activision",
+    "question": "Which former executive officers are no longer employed and so excluded from golden parachute compensation?",
+    "must_contain": "Chris Walther, Dennis Durkin and Claudine Naughton",
+    "expected_doc": "proxy_statement"
+  }
+]

@@ -7,6 +7,7 @@
     <style>
         /* ── Reset & Variables ─────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        [hidden] { display: none !important; }
 
         :root {
             --bg:       #09090b;
@@ -22,294 +23,113 @@
             --font:     'Inter', system-ui, -apple-system, sans-serif;
         }
 
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
+        body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
 
-        /* ── Header ─────────────────────────────────────────── */
+        /* ── Header & tabs ──────────────────────────────────── */
         header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 32px;
-            border-bottom: 1px solid var(--border);
-            background: var(--surface);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 32px; border-bottom: 1px solid var(--border); background: var(--surface);
         }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
+        .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
         .logo span { color: var(--accent); }
-
-        .health-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        .health-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--muted);
-        }
-
+        .health-badge { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+        .health-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
         .health-dot.ok { background: var(--success); }
         .health-dot.err { background: var(--error); }
 
-        /* ── Tabs ───────────────────────────────────────────── */
-        nav {
-            display: flex;
-            gap: 0;
-            padding: 0 32px;
-            border-bottom: 1px solid var(--border);
-            background: var(--surface);
-        }
-
+        nav { display: flex; padding: 0 32px; border-bottom: 1px solid var(--border); background: var(--surface); }
         .tab {
-            padding: 12px 20px;
-            font-size: 14px;
-            color: var(--muted);
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-            background: none;
-            border-top: none;
-            border-left: none;
-            border-right: none;
-            font-family: var(--font);
+            padding: 12px 20px; font-size: 14px; color: var(--muted); cursor: pointer;
+            border: none; border-bottom: 2px solid transparent; background: none;
+            transition: all 0.2s; font-family: var(--font);
         }
-
         .tab:hover { color: var(--text); }
         .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-        /* ── Main ───────────────────────────────────────────── */
-        main {
-            max-width: 900px;
-            margin: 32px auto;
-            padding: 0 32px;
-        }
-
+        main { max-width: 900px; margin: 32px auto; padding: 0 32px; }
         .section { display: none; }
         .section.active { display: block; }
 
-        /* ── Cards ──────────────────────────────────────────── */
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 20px;
-        }
+        /* ── Cards & forms ──────────────────────────────────── */
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+        .card-title { font-size: 14px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
 
-        .card-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 16px;
-        }
-
-        /* ── Form Elements ──────────────────────────────────── */
-        label {
-            display: block;
-            font-size: 13px;
-            color: var(--muted);
-            margin-bottom: 6px;
-        }
-
+        label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
         input[type="text"], input[type="number"], select, textarea {
-            width: 100%;
-            padding: 10px 12px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            color: var(--text);
-            font-size: 14px;
-            font-family: var(--font);
-            outline: none;
-            transition: border-color 0.2s;
+            width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border);
+            border-radius: var(--radius); color: var(--text); font-size: 14px; font-family: var(--font);
+            outline: none; transition: border-color 0.2s;
         }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--accent);
-        }
-
+        input:focus, select:focus, textarea:focus { border-color: var(--accent); }
         textarea { resize: vertical; min-height: 80px; }
-
-        .form-row {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
+        .form-row { display: flex; gap: 16px; margin-bottom: 16px; }
         .form-group { flex: 1; }
+        .mb { margin-bottom: 16px; }
 
-        /* ── Button ─────────────────────────────────────────── */
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: var(--radius);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            font-family: var(--font);
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #fff;
-        }
-
+        .btn { padding: 10px 20px; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; font-family: var(--font); transition: all 0.2s; }
+        .btn-primary { background: var(--accent); color: #fff; }
         .btn-primary:hover { background: var(--accent-h); }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-small { padding: 6px 14px; font-size: 13px; }
 
-        /* ── File Input ─────────────────────────────────────── */
-        .file-drop {
-            border: 2px dashed var(--border);
-            border-radius: var(--radius);
-            padding: 32px;
-            text-align: center;
-            color: var(--muted);
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-
-        .file-drop:hover { border-color: var(--accent); }
+        .file-drop { border: 2px dashed var(--border); border-radius: var(--radius); padding: 32px; text-align: center; color: var(--muted); cursor: pointer; transition: border-color 0.2s; }
+        .file-drop:hover, .file-drop.dragover { border-color: var(--accent); }
         .file-drop input { display: none; }
-        .file-drop p { margin-top: 8px; font-size: 13px; }
 
         /* ── Results ────────────────────────────────────────── */
-        .result {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-top: 16px;
-            white-space: pre-wrap;
-            word-break: break-word;
-            font-size: 14px;
-            line-height: 1.7;
-            display: none;
-        }
+        .answer-text { white-space: pre-wrap; word-break: break-word; font-size: 14px; line-height: 1.7; }
+        .result { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-top: 16px; white-space: pre-wrap; word-break: break-word; font-size: 14px; line-height: 1.7; }
+        .result-error { border-color: var(--error); color: var(--error); }
+        .json-display { font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 13px; line-height: 1.6; }
 
-        .result.visible { display: block; }
-
-        .result-error {
-            border-color: var(--error);
-            color: var(--error);
-        }
-
-        /* ── Source Cards ───────────────────────────────────── */
         .sources { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+        .source-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+        .source-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 12px; }
+        .source-rank { font-size: 12px; font-weight: 600; color: var(--accent); }
+        .source-chunk { font-size: 12px; color: var(--muted); font-family: monospace; word-break: break-all; flex: 1; }
+        .source-score { font-size: 12px; padding: 2px 8px; border-radius: 12px; background: var(--surface); color: var(--accent); }
+        .source-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+        .source-more summary { cursor: pointer; font-size: 13px; color: var(--muted); line-height: 1.5; }
+        .source-more summary:hover { color: var(--text); }
+        .source-more .hint { color: var(--accent); font-weight: 600; white-space: nowrap; }
+        .source-more .hint-open, .source-more[open] .hint-closed, .source-more[open] .preview { display: none; }
+        .source-more[open] .hint-open { display: inline; }
+        .source-full { white-space: pre-wrap; word-break: break-word; margin-top: 10px; padding: 12px; font-size: 13px;
+                       line-height: 1.6; color: var(--text); background: var(--surface); border-radius: var(--radius);
+                       max-height: 280px; overflow: auto; }
 
-        .source-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px 16px;
-        }
-
-        .source-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .source-chunk {
-            font-size: 12px;
-            color: var(--muted);
-            font-family: monospace;
-        }
-
-        .source-score {
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 12px;
-            background: var(--surface);
-            color: var(--accent);
-        }
-
-        .source-text {
-            font-size: 13px;
-            color: var(--muted);
-            line-height: 1.5;
-        }
-
-        /* ── Document List ──────────────────────────────────── */
-        .doc-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
+        /* ── Document list ──────────────────────────────────── */
+        .doc-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
         .doc-item:last-child { border-bottom: none; }
-
         .doc-name { font-weight: 500; }
         .doc-meta { font-size: 13px; color: var(--muted); }
-        .doc-type {
-            font-size: 12px;
-            padding: 3px 10px;
-            border-radius: 12px;
-            background: var(--bg);
-            color: var(--accent);
-            border: 1px solid var(--border);
-        }
+        .doc-type { font-size: 12px; padding: 3px 10px; border-radius: 12px; background: var(--bg); color: var(--accent); border: 1px solid var(--border); }
 
-        /* ── JSON Display ───────────────────────────────────── */
-        .json-display {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-top: 16px;
-            font-family: 'Cascadia Code', 'Fira Code', monospace;
-            font-size: 13px;
-            line-height: 1.6;
-            display: none;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-
-        .json-display.visible { display: block; }
-
-        /* ── Loading ────────────────────────────────────────── */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 24px;
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        .loading.visible { display: block; }
-
-        /* ── Empty State ────────────────────────────────────── */
-        .empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--muted);
-            font-size: 14px;
-        }
+        /* ── Quick questions, citations, extraction table ───── */
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .chip { font-size: 12px; padding: 5px 12px; border-radius: 14px; background: var(--bg); color: var(--muted);
+                border: 1px solid var(--border); cursor: pointer; font-family: var(--font); transition: all 0.2s; }
+        .chip:hover { color: var(--accent); border-color: var(--accent); }
+        .cite { color: var(--accent); text-decoration: none; font-weight: 600; }
+        .cite:hover { text-decoration: underline; }
+        .source-card.flash { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+        .muted { color: var(--muted); }
+        .extract-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .extract-table th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+                            color: var(--muted); padding: 8px 12px; border-bottom: 1px solid var(--border); }
+        .extract-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; word-break: break-word; }
+        .extract-table tr:last-child td { border-bottom: none; }
+        .extract-table .field { font-weight: 500; white-space: nowrap; }
+        .pill { display: inline-block; font-size: 11px; padding: 2px 8px; margin: 0 4px 4px 0; border-radius: 10px;
+                background: var(--bg); color: var(--accent); border: 1px solid var(--border); }
+        details { margin-top: 16px; }
+        summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+        .loading { text-align: center; padding: 24px; color: var(--muted); font-size: 14px; }
+        .empty { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <div class="logo">DealDoc <span>AI</span></div>
         <div class="health-badge">
@@ -318,7 +138,6 @@
         </div>
     </header>
 
-    <!-- Tabs -->
     <nav>
         <button class="tab active" data-tab="query">Query</button>
         <button class="tab" data-tab="extract">Extract</button>
@@ -328,301 +147,405 @@
 
     <main>
 
-        <!-- Query Section -->
+        <!-- Query -->
         <div class="section active" id="sec-query">
             <div class="card">
                 <div class="card-title">Ask a Question</div>
-                <div class="form-group" style="margin-bottom: 16px;">
+                <div class="chips" id="exampleChips"></div>
+                <div class="form-group mb">
                     <textarea id="queryQuestion" placeholder="e.g. What is the purchase price per share?" rows="2"></textarea>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Deal (optional)</label>
-                        <select id="queryDealId">
-                            <option value="">All documents</option>
-                        </select>
+                        <label for="queryDealId">Deal</label>
+                        <select id="queryDealId"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="queryDocId">Document</label>
+                        <select id="queryDocId"></select>
                     </div>
                     <div class="form-group" style="max-width: 120px;">
-                        <label>Top K</label>
+                        <label for="queryTopK">Top K</label>
                         <input type="number" id="queryTopK" value="5" min="1" max="20">
                     </div>
                 </div>
                 <button class="btn btn-primary" id="btnQuery">Search</button>
             </div>
 
-            <div class="loading" id="queryLoading">Retrieving and generating answer...</div>
+            <div class="loading" id="queryLoading" hidden>Retrieving and generating answer...</div>
 
-            <div class="card" id="queryAnswerCard" style="display: none;">
+            <div class="card" id="queryAnswerCard" hidden>
                 <div class="card-title">Answer</div>
-                <div id="queryAnswer"></div>
+                <div class="answer-text" id="queryAnswer"></div>
             </div>
 
-            <div id="querySources" class="sources"></div>
-
-            <div class="result" id="queryError"></div>
+            <div class="sources" id="querySources"></div>
+            <div class="result result-error" id="queryError" hidden></div>
         </div>
 
-        <!-- Extract Section -->
+        <!-- Extract -->
         <div class="section" id="sec-extract">
             <div class="card">
                 <div class="card-title">Extract Structured Data</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Deal</label>
-                        <select id="extractDealId"></select>
-                    </div>
+                <div class="form-group mb">
+                    <label for="extractDealId">Deal (all its documents are searched)</label>
+                    <select id="extractDealId"></select>
                 </div>
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label>Fields (comma-separated)</label>
+                <div class="form-group mb">
+                    <label for="extractFields">Fields (comma-separated)</label>
                     <input type="text" id="extractFields" value="deal_value, buyer, target, announcement_date, deal_type, industry, advisors, key_conditions, timeline">
                 </div>
                 <button class="btn btn-primary" id="btnExtract">Extract</button>
             </div>
 
-            <div class="loading" id="extractLoading">Extracting deal terms...</div>
-            <div class="json-display" id="extractResult"></div>
-            <div class="result" id="extractError"></div>
+            <div class="loading" id="extractLoading" hidden>Extracting deal terms... one search and one LLM call per field, this can take up to a minute.</div>
+            <div class="card" id="extractOutput" hidden>
+                <div id="extractTable"></div>
+                <details>
+                    <summary>Raw JSON</summary>
+                    <pre class="result json-display" id="extractJson"></pre>
+                </details>
+            </div>
+            <div class="result result-error" id="extractError" hidden></div>
         </div>
 
-        <!-- Documents Section -->
+        <!-- Documents -->
         <div class="section" id="sec-documents">
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <div class="card-title" style="margin-bottom: 0;">Indexed Documents</div>
-                    <button class="btn btn-primary" id="btnRefreshDocs" style="padding: 6px 14px; font-size: 13px;">Refresh</button>
+                    <button class="btn btn-primary btn-small" id="btnRefreshDocs">Refresh</button>
                 </div>
                 <div id="docList"></div>
             </div>
         </div>
 
-        <!-- Ingest Section -->
+        <!-- Ingest -->
         <div class="section" id="sec-ingest">
             <div class="card">
                 <div class="card-title">Upload Document</div>
                 <div class="file-drop" id="fileDrop">
-                    <input type="file" id="fileInput" accept=".html,.htm,.txt,.pdf">
+                    <input type="file" id="fileInput" accept=".html,.htm">
                     <p id="fileLabel">Click or drop an HTML file here</p>
                 </div>
                 <div class="form-row" style="margin-top: 16px;">
                     <div class="form-group">
-                        <label>Deal ID</label>
-                        <input type="text" id="ingestDealId" placeholder="e.g. msft_activision_merger">
+                        <label for="ingestDealId">Deal ID</label>
+                        <input type="text" id="ingestDealId" placeholder="e.g. msft_activision">
                     </div>
                     <div class="form-group">
-                        <label>Deal Type</label>
-                        <select id="ingestDealType">
+                        <label for="ingestDocId">Document ID (optional)</label>
+                        <input type="text" id="ingestDocId" placeholder="e.g. merger_agreement">
+                    </div>
+                    <div class="form-group">
+                        <label for="ingestDocType">Document type</label>
+                        <select id="ingestDocType">
                             <option value="merger_agreement">Merger Agreement</option>
                             <option value="proxy_statement">Proxy Statement</option>
                             <option value="other">Other</option>
                         </select>
                     </div>
                 </div>
-                <button class="btn btn-primary" id="btnIngest">Upload & Ingest</button>
+                <button class="btn btn-primary" id="btnIngest">Upload &amp; Ingest</button>
             </div>
 
-            <div class="loading" id="ingestLoading">Processing document...</div>
-            <div class="json-display" id="ingestResult"></div>
-            <div class="result" id="ingestError"></div>
+            <div class="loading" id="ingestLoading" hidden>Processing document...</div>
+            <div class="result json-display" id="ingestResult" hidden></div>
+            <div class="result result-error" id="ingestError" hidden></div>
         </div>
 
     </main>
 
     <script>
-        /* ── Config ──────────────────────────────────────────── */
-        const API = "http://localhost:8000";
+        // Served by FastAPI (http://127.0.0.1:8000/) -> same origin; opened as a file -> default address.
+        const API = location.protocol.startsWith("http") ? location.origin : "http://localhost:8000";
+        const ALL_DOCS = "";   // value of the "all documents / all deals" option
+        let documents = [];    // last list returned by GET /documents
 
-        /* ── API Calls ───────────────────────────────────────── */
-        async function apiGet(path) {
-            const res = await fetch(`${API}${path}`);
-            if (!res.ok) throw new Error(await res.text());
+        /* ── Helpers ─────────────────────────────────────────── */
+        const $ = (id) => document.getElementById(id);
+        const setVisible = (id, visible) => { $(id).hidden = !visible; };
+
+        // Anything coming from the server or the LLM goes through esc() before innerHTML.
+        const esc = (value) => String(value).replace(/[&<>"']/g, (c) =>
+            ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+        function showError(id, message) {
+            $(id).textContent = message;
+            setVisible(id, true);
+        }
+
+        /* ── API layer ───────────────────────────────────────── */
+        async function request(path, options) {
+            const res = await fetch(`${API}${path}`, options);
+            if (!res.ok) {
+                const body = await res.text();
+                let detail = body;
+                try { detail = JSON.parse(body).detail ?? body; } catch { /* not JSON */ }
+                throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+            }
             return res.json();
         }
 
-        async function apiPost(path, body) {
-            const res = await fetch(`${API}${path}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body),
-            });
-            if (!res.ok) throw new Error(await res.text());
-            return res.json();
-        }
+        const apiGet = (path) => request(path);
+        const apiPost = (path, body) => request(path, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+        });
+        const apiUpload = (path, formData) => request(path, { method: "POST", body: formData });
 
-        async function apiUpload(path, formData) {
-            const res = await fetch(`${API}${path}`, {
-                method: "POST",
-                body: formData,
-            });
-            if (!res.ok) throw new Error(await res.text());
-            return res.json();
-        }
-
-        /* ── Health Check ─────────────────────────────────────── */
-        async function checkHealth() {
-            const dot = document.getElementById("healthDot");
-            const text = document.getElementById("healthText");
+        // One place for "disable button + spinner + error box" (used by every action).
+        async function runAction({ button, loading, error, task }) {
+            $(button).disabled = true;
+            setVisible(loading, true);
+            setVisible(error, false);
             try {
-                await apiGet("/health");
-                dot.className = "health-dot ok";
-                text.textContent = "Connected";
-            } catch {
-                dot.className = "health-dot err";
-                text.textContent = "Disconnected";
+                await task();
+            } catch (e) {
+                showError(error, e.message);
+            } finally {
+                $(button).disabled = false;
+                setVisible(loading, false);
             }
         }
 
-        /* ── Documents ────────────────────────────────────────── */
+        /* ── Health ──────────────────────────────────────────── */
+        async function checkHealth() {
+            try {
+                const { status } = await apiGet("/health");
+                const ok = status === "ok";
+                $("healthDot").className = `health-dot ${ok ? "ok" : "err"}`;
+                $("healthText").textContent = ok ? "Connected" : "Index unavailable";
+            } catch {
+                $("healthDot").className = "health-dot err";
+                $("healthText").textContent = "Disconnected";
+            }
+        }
+
+        /* ── Documents + dropdowns ───────────────────────────── */
         async function loadDocuments() {
-            const container = document.getElementById("docList");
+            const container = $("docList");
             try {
                 const data = await apiGet("/documents");
+                documents = data.documents;
                 if (data.total === 0) {
                     container.innerHTML = '<div class="empty">No documents indexed yet.</div>';
-                    return;
+                } else {
+                    container.innerHTML = documents.map((d) => `
+                        <div class="doc-item">
+                            <div>
+                                <div class="doc-name">${esc(d.deal_id)} / ${esc(d.doc_id)}</div>
+                                <div class="doc-meta">${esc(d.source_file)} · ${esc(d.chunks)} chunks</div>
+                            </div>
+                            <span class="doc-type">${esc(d.doc_type)}</span>
+                        </div>`).join("");
                 }
-                container.innerHTML = data.documents.map(doc => `
-                    <div class="doc-item">
-                        <div>
-                            <div class="doc-name">${doc.deal_id}</div>
-                            <div class="doc-meta">${doc.source_file}</div>
-                        </div>
-                        <span class="doc-type">${doc.deal_type}</span>
-                    </div>
-                `).join("");
-                populateDealDropdowns(data.documents);
+                populateDropdowns();
             } catch (e) {
-                container.innerHTML = `<div class="result result-error visible">${e.message}</div>`;
+                container.innerHTML = `<div class="result result-error">${esc(e.message)}</div>`;
             }
         }
 
-        function populateDealDropdowns(documents) {
-            const options = documents.map(d => `<option value="${d.deal_id}">${d.deal_id}</option>`).join("");
-            const allOption = '<option value="">All documents</option>';
-            document.getElementById("queryDealId").innerHTML = allOption + options;
-            document.getElementById("extractDealId").innerHTML = options;
+        const uniqueDeals = () => [...new Set(documents.map((d) => d.deal_id))];
+        const optionsHtml = (values) => values.map((v) => `<option value="${esc(v)}">${esc(v)}</option>`).join("");
+
+        function populateDropdowns() {
+            const deals = uniqueDeals();
+            $("queryDealId").innerHTML = `<option value="${ALL_DOCS}">All deals</option>` + optionsHtml(deals);
+            $("extractDealId").innerHTML = optionsHtml(deals);
+            refreshDocDropdown();
+        }
+
+        function refreshDocDropdown() {
+            const dealId = $("queryDealId").value;
+            const docs = documents.filter((d) => dealId === ALL_DOCS || d.deal_id === dealId).map((d) => d.doc_id);
+            $("queryDocId").innerHTML = `<option value="${ALL_DOCS}">All documents</option>` + optionsHtml([...new Set(docs)]);
         }
 
         /* ── Query ───────────────────────────────────────────── */
-        async function handleQuery() {
-            const question = document.getElementById("queryQuestion").value.trim();
+        function renderSources(sources) {
+            $("querySources").innerHTML = sources.map((s) => `
+                <div class="source-card" id="src-${esc(s.rank)}">
+                    <div class="source-header">
+                        <span class="source-rank">[Source ${esc(s.rank)}]</span>
+                        <span class="source-chunk">${esc(s.doc_id)}${s.source_file ? " · " + esc(s.source_file) : ""} · chunk ${esc(String(s.chunk_id).split("__").pop())}</span>
+                        <span class="source-score">${esc(s.score)}</span>
+                    </div>
+                    <details class="source-more">
+                        <summary>
+                            <span class="preview">${esc(s.text_preview)}</span>
+                            <span class="hint hint-closed">show the full passage ▸</span>
+                            <span class="hint hint-open">hide the passage ▾</span>
+                        </summary>
+                        <div class="source-full">${esc(s.text || s.text_preview)}</div>
+                    </details>
+                </div>`).join("");
+        }
+
+        // The answer is escaped first; the only HTML we add is our own citation links.
+        // Each citation shows WHICH document it points to, and hovering it shows the start of the passage.
+        function renderAnswer(text, sources) {
+            const byRank = Object.fromEntries(sources.map((s) => [String(s.rank), s]));
+            $("queryAnswer").innerHTML = esc(text).replace(/\[Source (\d+)\]/g, (_, n) => {
+                const s = byRank[n];
+                const label = s ? `Source ${n} · ${esc(s.doc_id)}` : `Source ${n}`;
+                const tip = s ? esc((s.text || s.text_preview).slice(0, 300)) + "…" : "";
+                return `<a href="#src-${n}" class="cite" data-src="${n}" title="${tip}">[${label}]</a>`;
+            });
+        }
+
+        document.addEventListener("click", (e) => {
+            const cite = e.target.closest(".cite[data-src]");   // real citations only: never swallow other clicks
+            if (!cite) return;
+            const card = $(`src-${cite.dataset.src}`);
+            if (!card) return;
+            e.preventDefault();
+            const details = card.querySelector("details");
+            if (details) details.open = true;   // show the full passage the answer is based on
+            card.scrollIntoView({ behavior: "smooth", block: "center" });
+            card.classList.add("flash");
+            setTimeout(() => card.classList.remove("flash"), 1500);
+        });
+
+        const EXAMPLE_QUESTIONS = [
+            "What is the purchase price per share?",
+            "What is the Company Termination Fee?",
+            "When is the special meeting of stockholders?",
+            "What vote is required to adopt the merger agreement?",
+        ];
+        $("exampleChips").innerHTML = EXAMPLE_QUESTIONS.map((q) => `<button type="button" class="chip">${esc(q)}</button>`).join("");
+        $("exampleChips").addEventListener("click", (e) => {
+            const chip = e.target.closest(".chip");
+            if (!chip) return;
+            $("queryQuestion").value = chip.textContent;
+            $("queryQuestion").focus();
+        });
+
+        function handleQuery() {
+            const question = $("queryQuestion").value.trim();
             if (!question) return;
 
-            const dealId = document.getElementById("queryDealId").value || null;
-            const topK = parseInt(document.getElementById("queryTopK").value) || 5;
-
-            show("queryLoading"); hide("queryError"); hide("queryAnswerCard"); hide("querySources");
-
-            try {
-                const data = await apiPost("/query", { question, top_k: topK, deal_id: dealId });
-                document.getElementById("queryAnswer").innerHTML = data.answer;
-                show("queryAnswerCard");
-
-                document.getElementById("querySources").innerHTML = data.sources.map(s => `
-                    <div class="source-card">
-                        <div class="source-header">
-                            <span class="source-chunk">${s.chunk_id}</span>
-                            <span class="source-score">${s.score}</span>
-                        </div>
-                        <div class="source-text">${s.text_preview}</div>
-                    </div>
-                `).join("");
-            } catch (e) {
-                showError("queryError", e.message);
-            } finally {
-                hide("queryLoading");
-            }
+            runAction({
+                button: "btnQuery", loading: "queryLoading", error: "queryError",
+                task: async () => {
+                    setVisible("queryAnswerCard", false);
+                    $("querySources").innerHTML = "";
+                    const data = await apiPost("/query", {
+                        question,
+                        top_k: parseInt($("queryTopK").value, 10) || 5,
+                        deal_id: $("queryDealId").value || null,
+                        doc_id: $("queryDocId").value || null,
+                    });
+                    renderAnswer(data.answer, data.sources);
+                    setVisible("queryAnswerCard", true);
+                    renderSources(data.sources);
+                },
+            });
         }
 
         /* ── Extract ─────────────────────────────────────────── */
-        async function handleExtract() {
-            const dealId = document.getElementById("extractDealId").value;
-            const fieldsRaw = document.getElementById("extractFields").value;
-            const fields = fieldsRaw.split(",").map(f => f.trim()).filter(Boolean);
+        function formatValue(value) {
+            if (value === null || value === undefined) return '<span class="muted">not found</span>';
+            if (Array.isArray(value)) return esc(value.join(", "));
+            return esc(typeof value === "object" ? JSON.stringify(value) : value);
+        }
 
+        function renderExtraction(fields) {
+            const rows = Object.entries(fields).map(([name, res]) => {
+                const sources = res.sources
+                    .map((s) => `<span class="pill" title="${esc(s.chunk_id)}">${esc(s.doc_id)} #${esc(s.chunk_id.split("__").pop())}</span>`)
+                    .join("") || '<span class="muted">—</span>';
+                return `<tr><td class="field">${esc(name)}</td><td>${formatValue(res.value)}</td><td>${sources}</td></tr>`;
+            }).join("");
+            $("extractTable").innerHTML = `<table class="extract-table"><thead><tr>
+                <th>Field</th><th>Value</th><th>Found in</th></tr></thead><tbody>${rows}</tbody></table>`;
+        }
+
+        function handleExtract() {
+            const dealId = $("extractDealId").value;
+            const fields = $("extractFields").value.split(",").map((f) => f.trim()).filter(Boolean);
             if (!dealId) return;
 
-            show("extractLoading"); hide("extractError"); hide("extractResult");
-
-            try {
-                const data = await apiPost("/extract", { deal_id: dealId, fields });
-                document.getElementById("extractResult").textContent = JSON.stringify(data, null, 2);
-                show("extractResult");
-            } catch (e) {
-                showError("extractError", e.message);
-            } finally {
-                hide("extractLoading");
-            }
+            runAction({
+                button: "btnExtract", loading: "extractLoading", error: "extractError",
+                task: async () => {
+                    setVisible("extractOutput", false);
+                    const data = await apiPost("/extract", { deal_id: dealId, fields });
+                    renderExtraction(data.extracted_fields);
+                    $("extractJson").textContent = JSON.stringify(data, null, 2);
+                    setVisible("extractOutput", true);
+                },
+            });
         }
 
         /* ── Ingest ──────────────────────────────────────────── */
-        async function handleIngest() {
-            const fileInput = document.getElementById("fileInput");
-            if (!fileInput.files.length) return;
+        function handleIngest() {
+            const file = $("fileInput").files[0];
+            if (!file) return;
 
-            const dealId = document.getElementById("ingestDealId").value;
-            const dealType = document.getElementById("ingestDealType").value;
+            const params = new URLSearchParams({ doc_type: $("ingestDocType").value });
+            const dealId = $("ingestDealId").value.trim();
+            const docId = $("ingestDocId").value.trim();
+            if (dealId) params.set("deal_id", dealId);
+            if (docId) params.set("doc_id", docId);
 
             const formData = new FormData();
-            formData.append("file", fileInput.files[0]);
-            if (dealId) formData.append("deal_id", dealId);
-            formData.append("deal_type", dealType);
+            formData.append("file", file);
 
-            show("ingestLoading"); hide("ingestError"); hide("ingestResult");
-
-            try {
-                const data = await apiUpload(`/ingest?deal_type=${dealType}${dealId ? "&deal_id=" + dealId : ""}`, formData);
-                document.getElementById("ingestResult").textContent = JSON.stringify(data, null, 2);
-                show("ingestResult");
-                loadDocuments();
-            } catch (e) {
-                showError("ingestError", e.message);
-            } finally {
-                hide("ingestLoading");
-            }
+            runAction({
+                button: "btnIngest", loading: "ingestLoading", error: "ingestError",
+                task: async () => {
+                    setVisible("ingestResult", false);
+                    const data = await apiUpload(`/ingest?${params}`, formData);
+                    $("ingestResult").textContent = JSON.stringify(data, null, 2);
+                    setVisible("ingestResult", true);
+                    await loadDocuments();
+                },
+            });
         }
 
-        /* ── Helpers ─────────────────────────────────────────── */
-        function show(id) { document.getElementById(id).classList.add("visible"); }
-        function hide(id) { document.getElementById(id).classList.remove("visible"); }
-        function showError(id, msg) {
-            const el = document.getElementById(id);
-            el.textContent = msg;
-            el.classList.add("visible", "result-error");
-        }
-
-        /* ── Tab Switching ────────────────────────────────────── */
-        document.querySelectorAll(".tab").forEach(tab => {
+        /* ── Tabs ────────────────────────────────────────────── */
+        document.querySelectorAll(".tab").forEach((tab) => {
             tab.addEventListener("click", () => {
-                document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-                document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+                document.querySelectorAll(".tab, .section").forEach((el) => el.classList.remove("active"));
                 tab.classList.add("active");
-                document.getElementById(`sec-${tab.dataset.tab}`).classList.add("active");
+                $(`sec-${tab.dataset.tab}`).classList.add("active");
             });
         });
 
-        /* ── File Drop ────────────────────────────────────────── */
-        const fileDrop = document.getElementById("fileDrop");
-        const fileInput = document.getElementById("fileInput");
+        /* ── File picker + drag & drop ───────────────────────── */
+        const DEFAULT_LABEL = "Click or drop an HTML file here";
+        const fileDrop = $("fileDrop");
+        const fileInput = $("fileInput");
+        const updateFileLabel = () => { $("fileLabel").textContent = fileInput.files[0]?.name || DEFAULT_LABEL; };
 
         fileDrop.addEventListener("click", () => fileInput.click());
-        fileInput.addEventListener("change", () => {
-            document.getElementById("fileLabel").textContent = fileInput.files[0]?.name || "Click or drop an HTML file here";
+        fileInput.addEventListener("change", updateFileLabel);
+        // preventDefault on dragover/drop is required, otherwise the browser navigates to the dropped file
+        fileDrop.addEventListener("dragover", (e) => { e.preventDefault(); fileDrop.classList.add("dragover"); });
+        fileDrop.addEventListener("dragleave", () => fileDrop.classList.remove("dragover"));
+        fileDrop.addEventListener("drop", (e) => {
+            e.preventDefault();
+            fileDrop.classList.remove("dragover");
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                updateFileLabel();
+            }
         });
 
-        /* ── Event Listeners ──────────────────────────────────── */
-        document.getElementById("btnQuery").addEventListener("click", handleQuery);
-        document.getElementById("btnExtract").addEventListener("click", handleExtract);
-        document.getElementById("btnIngest").addEventListener("click", handleIngest);
-        document.getElementById("btnRefreshDocs").addEventListener("click", loadDocuments);
-
-        document.getElementById("queryQuestion").addEventListener("keydown", e => {
+        /* ── Wiring ──────────────────────────────────────────── */
+        $("btnQuery").addEventListener("click", handleQuery);
+        $("btnExtract").addEventListener("click", handleExtract);
+        $("btnIngest").addEventListener("click", handleIngest);
+        $("btnRefreshDocs").addEventListener("click", loadDocuments);
+        $("queryDealId").addEventListener("change", refreshDocDropdown);
+        $("queryQuestion").addEventListener("keydown", (e) => {
             if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleQuery(); }
         });
 
-        /* ── Init ─────────────────────────────────────────────── */
         checkHealth();
         loadDocuments();
     </script>
-
 </body>
 </html>

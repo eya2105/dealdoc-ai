@@ -1,89 +1,62 @@
-import re
+"""Ingestion: parse -> chunk -> embed -> store."""
 from pathlib import Path
-from bs4 import BeautifulSoup
+from typing import Callable, Optional
 
-from config import CHUNK_SIZE, CHUNK_OVERLAP, INGEST_BATCH_SIZE
-from embeddings import embed_documents
-from store import get_collection
-
-
-def parse_document(file_path: str) -> str:
-    """Extract clean text from an HTML SEC filing."""
-    with open(file_path, "r", encoding="windows-1252", errors="replace") as f:
-        html = f.read()
-    soup = BeautifulSoup(html, "html.parser")
-    for tag in soup(["script", "style"]):
-        tag.decompose()
-    raw = soup.get_text(separator=" ", strip=True)
-    return re.sub(r"\s+", " ", raw).strip()
+from chunking import chunk_text
+from config import PRELOAD_DOCUMENTS
+from ids import make_chunk_id, slugify
+from parsing import parse_document
+from ports import Embedder, VectorIndex
 
 
-def chunk_text(text: str, chunk_size: int = CHUNK_SIZE,
-               overlap: int = CHUNK_OVERLAP) -> list[str]:
-    """Split text into overlapping fixed-size chunks."""
-    chunks = []
-    start = 0
-    text_len = len(text)
-    while start < text_len:
-        end = start + chunk_size
-        if end < text_len:
-            snapped = text.rfind(" ", start, end)
-            if snapped > start:
-                end = snapped
-        chunk = text[start:end].strip()
-        if chunk:
-            chunks.append(chunk)
-        start += chunk_size - overlap
-    return chunks
+class Ingestor:
+    """The parser and the chunking strategy are injected: another file format or another
+    way of cutting text is a new function passed in, not an edit of this class."""
 
+    def __init__(self, index: VectorIndex, embedder: Embedder, *,
+                 parser: Callable[[str], str] = parse_document,
+                 chunker: Callable[[str], list[str]] = chunk_text):
+        self._index, self._embedder, self._parser, self._chunker = index, embedder, parser, chunker
 
-def ingest(file_path: str, metadata: dict) -> dict:
-    """Full ingestion pipeline: parse → chunk → embed → store."""
-    text = parse_document(file_path)
-    chunks = chunk_text(text)
-    embeddings = embed_documents(chunks)
+    def ingest(self, file_path: str,
+               deal_id: Optional[str] = None,
+               doc_id: Optional[str] = None,
+               doc_type: str = "unknown") -> dict:
+        """Index one document. Re-ingesting the same (deal_id, doc_id) replaces it."""
+        doc_id = slugify(doc_id or Path(file_path).stem)
+        deal_id = slugify(deal_id or doc_id)
 
-    collection = get_collection()
+        text = self._parser(file_path)
+        chunks = self._chunker(text)
+        if not chunks:
+            raise ValueError("No text could be extracted from this document")
+        embeddings = self._embedder.embed(chunks)  # embed first: a failure must not wipe the old index
 
-    doc_id = metadata.get("deal_id", Path(file_path).stem)
-    ids = [f"{doc_id}_{i}" for i in range(len(chunks))]
-    metadatas = [{**metadata, "chunk_index": i} for i in range(len(chunks))]
-
-    # ChromaDB 0.4.x limits each add() to ~166 items — batch accordingly
-    for i in range(0, len(chunks), INGEST_BATCH_SIZE):
-        end = i + INGEST_BATCH_SIZE
-        collection.add(
-            ids=ids[i:end],
-            documents=chunks[i:end],
-            embeddings=embeddings[i:end],
-            metadatas=metadatas[i:end],
+        base_metadata = {
+            "deal_id": deal_id,
+            "doc_id": doc_id,
+            "doc_type": doc_type,
+            "source_file": Path(file_path).name,
+        }
+        self._index.replace_document(
+            deal_id, doc_id,
+            ids=[make_chunk_id(deal_id, doc_id, i) for i in range(len(chunks))],
+            texts=chunks,
+            embeddings=embeddings,
+            metadatas=[{**base_metadata, "chunk_index": i} for i in range(len(chunks))],
         )
+        return {
+            "deal_id": deal_id,
+            "doc_id": doc_id,
+            "total_chunks": len(chunks),
+            "document_chars": len(text),
+        }
 
-    return {
-        "deal_id": doc_id,
-        "total_chunks": len(chunks),
-        "document_chars": len(text),
-    }
 
-
-# preload
 if __name__ == "__main__":
-    docs = [
-        {
-            "path": "data/Agreement and Plan of Merger.html",
-            "deal_id": "msft_activision_merger",
-            "deal_type": "merger_agreement",
-        },
-        {
-            "path": "data/DEF M 14A — Special Meeting Proxy Statement.html",
-            "deal_id": "msft_activision_proxy",
-            "deal_type": "proxy_statement",
-        },
-    ]
-    for doc in docs:
-        result = ingest(doc["path"], {
-            "deal_id": doc["deal_id"],
-            "deal_type": doc["deal_type"],
-            "source_file": Path(doc["path"]).name,
-        })
-        print(f"Ingested {result['total_chunks']} chunks for {result['deal_id']}")
+    from container import get_container
+
+    ingestor = get_container().ingestor
+    for doc in PRELOAD_DOCUMENTS:
+        result = ingestor.ingest(**doc)
+        print(f"Ingested {result['total_chunks']} chunks for {result['deal_id']} / {result['doc_id']}")

@@ -1,0 +1,456 @@
+{
+  "config": {
+    "k": 5,
+    "expand": true,
+    "llm_model": "openai/gpt-oss-120b",
+    "chunk_size": 1000,
+    "overlap": 200,
+    "model": "all-MiniLM-L6-v2",
+    "timestamp": "2026-10-24T23:22:51"
+  },
+  "overall": {
+    "n": 16,
+    "recall": 0.75,
+    "mrr": 0.496875
+  },
+  "by_category": {
+    "numeric": {
+      "n": 6,
+      "recall": 1.0,
+      "mrr": 0.7916666666666666
+    },
+    "date": {
+      "n": 3,
+      "recall": 1.0,
+      "mrr": 0.5833333333333334
+    },
+    "entity": {
+      "n": 3,
+      "recall": 0.3333333333333333,
+      "mrr": 0.06666666666666667
+    },
+    "clause": {
+      "n": 4,
+      "recall": 0.5,
+      "mrr": 0.3125
+    }
+  },
+  "questions": [
+    {
+      "id": "price_per_share",
+      "category": "numeric",
+      "rank": 4,
+      "retrieved": 18,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__263",
+          "doc_id": "proxy_statement",
+          "score": 0.87,
+          "preview": "reaching its decision to approve the merger agreement and to recommend that Activision Blizzard stockholders vote to adopt the merger agreement, the Activision "
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__117",
+          "doc_id": "proxy_statement",
+          "score": 0.84,
+          "preview": "merger agreement. Q: How does the per share merger consideration compare to the market price of Activision Blizzard common stock prior to the date on which the "
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__43",
+          "doc_id": "proxy_statement",
+          "score": 0.837,
+          "preview": "specified circumstances, Microsoft will be required to pay Activision Blizzard a reverse termination fee upon the termination of the merger agreement, as descri"
+        }
+      ]
+    },
+    {
+      "id": "company_termination_fee",
+      "category": "numeric",
+      "rank": 1,
+      "retrieved": 17,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__190",
+          "doc_id": "proxy_statement",
+          "score": 0.858,
+          "preview": "Under certain specified circumstances, Activision Blizzard will be required to pay Microsoft a termination fee of $2,270,100,000 upon the termination of the mer"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__102",
+          "doc_id": "proxy_statement",
+          "score": 0.848,
+          "preview": "or \u200b \u2022 the Activision Blizzard Board of Directors has effected a company board recommendation change. \u200b Termination Fee (page 92 ) Activision Blizzard will be r"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__280",
+          "doc_id": "proxy_statement",
+          "score": 0.834,
+          "preview": "Blizzard pays a $2,270,100,000 termination fee. The Activision Blizzard Board of Directors further considered that the timing of the merger would provide ample "
+        }
+      ]
+    },
+    {
+      "id": "parent_fee_max",
+      "category": "numeric",
+      "rank": 1,
+      "retrieved": 17,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__1002",
+          "doc_id": "proxy_statement",
+          "score": 0.767,
+          "preview": "Company that is the primary cause of the failure of any condition to this Agreement to be satisfied shall be considered a material breach), then Parent shall pr"
+        },
+        {
+          "chunk_id": "msft_activision__merger_agreement__376",
+          "doc_id": "merger_agreement",
+          "score": 0.736,
+          "preview": "pursuant to applicable Law), other than the conditions set forth in Section 7.1(b) or Section 7.1(d) (solely in connection with an Antitrust Law), and, in eithe"
+        },
+        {
+          "chunk_id": "msft_activision__merger_agreement__377",
+          "doc_id": "merger_agreement",
+          "score": 0.704,
+          "preview": "time after April 18, 2023, an amount equal to $3,000,000,000 (any fee payable pursuant to clause (i), (ii) or (iii), the \u201c Parent Termination Fee \u201d) by wire tra"
+        }
+      ]
+    },
+    {
+      "id": "parent_fee_min",
+      "category": "numeric",
+      "rank": 1,
+      "retrieved": 17,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__1002",
+          "doc_id": "proxy_statement",
+          "score": 0.785,
+          "preview": "Company that is the primary cause of the failure of any condition to this Agreement to be satisfied shall be considered a material breach), then Parent shall pr"
+        },
+        {
+          "chunk_id": "msft_activision__merger_agreement__376",
+          "doc_id": "merger_agreement",
+          "score": 0.758,
+          "preview": "pursuant to applicable Law), other than the conditions set forth in Section 7.1(b) or Section 7.1(d) (solely in connection with an Antitrust Law), and, in eithe"
+        },
+        {
+          "chunk_id": "msft_activision__merger_agreement__369",
+          "doc_id": "merger_agreement",
+          "score": 0.737,
+          "preview": "or causes to be paid to Parent (or its designee) the Company Termination Fee pursuant to Section 8.3(b)(iii) ; and (iii) the Company has complied with Section 5"
+        }
+      ]
+    },
+    {
+      "id": "advisor_fee",
+      "category": "numeric",
+      "rank": 1,
+      "retrieved": 20,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__349",
+          "doc_id": "proxy_statement",
+          "score": 0.83,
+          "preview": "Blizzard, Microsoft and/or their respective affiliates, for which Allen & Company would expect to receive compensation. In the ordinary course, Allen & Company "
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__1052",
+          "doc_id": "proxy_statement",
+          "score": 0.803,
+          "preview": "be converted into the right to receive $95.00 per share in cash (the \u201c Merger Consideration \u201d). The terms and conditions of the Merger are more fully set forth "
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__1053",
+          "doc_id": "proxy_statement",
+          "score": 0.783,
+          "preview": "\u201c Opinion Fee \u201d) and the principal portion is contingent upon consummation of the Merger. No portion of the Opinion Fee is contingent upon either the conclusion"
+        }
+      ]
+    },
+    {
+      "id": "premium",
+      "category": "numeric",
+      "rank": 2,
+      "retrieved": 18,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__353",
+          "doc_id": "proxy_statement",
+          "score": 0.662,
+          "preview": "that is less than the merger consideration, will be, as of the effective time and as determined by Microsoft, (x) assumed by Microsoft and converted into a nonq"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__117",
+          "doc_id": "proxy_statement",
+          "score": 0.643,
+          "preview": "merger agreement. Q: How does the per share merger consideration compare to the market price of Activision Blizzard common stock prior to the date on which the "
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__373",
+          "doc_id": "proxy_statement",
+          "score": 0.64,
+          "preview": "of such increased base salary and prorated in respect of the period following the Workplace Responsibility Committee\u2019s conclusion. \u200b Value of Shares and Equity "
+        }
+      ]
+    },
+    {
+      "id": "outside_date",
+      "category": "date",
+      "rank": 2,
+      "retrieved": 19,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__988",
+          "doc_id": "proxy_statement",
+          "score": 0.762,
+          "preview": "Termination Date all conditions to this Agreement are satisfied (other than those conditions that by their terms are to be satisfied at the Closing, each of whi"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__97",
+          "doc_id": "proxy_statement",
+          "score": 0.733,
+          "preview": "(except that a party may not terminate the merger agreement pursuant to this provision if such party\u2019s material breach of any provision of the merger agreement "
+        },
+        {
+          "chunk_id": "msft_activision__merger_agreement__362",
+          "doc_id": "merger_agreement",
+          "score": 0.731,
+          "preview": "the Company if the Effective Time has not occurred by 11:59 p.m., Pacific time, on January 18, 2023 (such time and date, the \u201c Initial Termination Date \u201d, and t"
+        }
+      ]
+    },
+    {
+      "id": "meeting_date",
+      "category": "date",
+      "rank": 4,
+      "retrieved": 20,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__6",
+          "doc_id": "proxy_statement",
+          "score": 0.812,
+          "preview": "Blizzard, the performance by Activision Blizzard of its obligations thereunder, and the consummation of the transactions contemplated thereby, upon the terms an"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__164",
+          "doc_id": "proxy_statement",
+          "score": 0.806,
+          "preview": "proposal or the adjournment proposal (assuming a quorum is present). Shares Held by Activision Blizzard\u2019s Directors and Executive Officers As of the close of bu"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__54",
+          "doc_id": "proxy_statement",
+          "score": 0.795,
+          "preview": "the same effect as a vote \u201c AGAINST \u201d the adjournment proposal, and broker non-votes will not have any effect on the adjournment proposal (assuming a quorum is "
+        }
+      ]
+    },
+    {
+      "id": "record_date",
+      "category": "date",
+      "rank": 1,
+      "retrieved": 20,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__15",
+          "doc_id": "proxy_statement",
+          "score": 0.689,
+          "preview": "to which the special meeting may be properly adjourned or postponed. \u200b \u200b RECORD DATE: \u200b \u200b Stockholders of record at the close of business on March 14, 2022, whi"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__158",
+          "doc_id": "proxy_statement",
+          "score": 0.604,
+          "preview": "compensation proposal; and Proposal 3 \u2014 Adjournment of the Special Meeting. To adjourn the special meeting to a later date or dates, if necessary or appropriate"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__763",
+          "doc_id": "proxy_statement",
+          "score": 0.592,
+          "preview": "price per share equal to or greater than the fair market value of a share of Company Common Stock on the effective date of such grant, and (y) has a grant date "
+        }
+      ]
+    },
+    {
+      "id": "financial_advisor",
+      "category": "entity",
+      "rank": 5,
+      "retrieved": 20,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__271",
+          "doc_id": "proxy_statement",
+          "score": 0.84,
+          "preview": "and legal and financial advisors, of the various potential strategic alternatives available to Activision Blizzard, including remaining an independent public co"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__272",
+          "doc_id": "proxy_statement",
+          "score": 0.817,
+          "preview": "of, and other matters related to, the merger, multiple times between November 26, 2021, which was the date on which Microsoft first indicated that it would be w"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__26",
+          "doc_id": "proxy_statement",
+          "score": 0.811,
+          "preview": "of Directors and Reasons for the Merger \u200b \u200b \u200b \u200b 43 \u200b \u200b \u200b Financial Forecasts \u200b \u200b \u200b \u200b 48 \u200b \u200b \u200b Opinion of Activision Blizzard\u2019s Financial Advisor \u200b \u200b \u200b \u200b 52 \u200b \u200b "
+        }
+      ]
+    },
+    {
+      "id": "merger_sub",
+      "category": "entity",
+      "rank": null,
+      "retrieved": 20,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__266",
+          "doc_id": "proxy_statement",
+          "score": 0.817,
+          "preview": "for many of Activision Blizzard\u2019s employees. \u200b \u2022 Benefits to Customers . The belief of the Activision Blizzard Board of Directors, based on discussions between "
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__271",
+          "doc_id": "proxy_statement",
+          "score": 0.807,
+          "preview": "and legal and financial advisors, of the various potential strategic alternatives available to Activision Blizzard, including remaining an independent public co"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__477",
+          "doc_id": "proxy_statement",
+          "score": 0.805,
+          "preview": "advisor to the Activision Blizzard Board of Directors; \u200b \u2022 the inapplicability of anti-takeover statutes to the merger; \u200b \u2022 the requisite vote of Activision Bli"
+        }
+      ]
+    },
+    {
+      "id": "antitrust_act",
+      "category": "entity",
+      "rank": 8,
+      "retrieved": 18,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__540",
+          "doc_id": "proxy_statement",
+          "score": 0.746,
+          "preview": "terminate the merger agreement pursuant to this provision if such party\u2019s material breach of any provision of the merger agreement is the primary cause of the f"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__97",
+          "doc_id": "proxy_statement",
+          "score": 0.733,
+          "preview": "(except that a party may not terminate the merger agreement pursuant to this provision if such party\u2019s material breach of any provision of the merger agreement "
+        },
+        {
+          "chunk_id": "msft_activision__merger_agreement__361",
+          "doc_id": "merger_agreement",
+          "score": 0.705,
+          "preview": "of the Merger will be in effect, or any action has been taken by any Governmental Authority of competent jurisdiction, that, in each case, prohibits, makes ille"
+        }
+      ]
+    },
+    {
+      "id": "no_shop",
+      "category": "clause",
+      "rank": null,
+      "retrieved": 19,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__881",
+          "doc_id": "proxy_statement",
+          "score": 0.708,
+          "preview": "not authorize or direct any of its or its Subsidiaries\u2019 employees, consultants or other Representatives to, directly or indirectly, (i) solicit, initiate, propo"
+        },
+        {
+          "chunk_id": "msft_activision__merger_agreement__260",
+          "doc_id": "merger_agreement",
+          "score": 0.703,
+          "preview": "that has made or delivered to the Company a bona fide written Acquisition Proposal after the date of this Agreement that did not result or arise from a breach o"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__885",
+          "doc_id": "proxy_statement",
+          "score": 0.689,
+          "preview": "personnel, of the Company or any of its Subsidiaries to any Person or its Representatives (including, for these purposes, sources of financing) that has made or"
+        }
+      ]
+    },
+    {
+      "id": "superior_proposal",
+      "category": "clause",
+      "rank": 1,
+      "retrieved": 18,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__684",
+          "doc_id": "proxy_statement",
+          "score": 0.614,
+          "preview": ", 3.21 , 3.22 , and 3.23 and the covenants set forth in Section 5.2 , the term \u201cSubsidiary\u201d in such definition, representations and warranties and covenants sha"
+        },
+        {
+          "chunk_id": "msft_activision__merger_agreement__258",
+          "doc_id": "merger_agreement",
+          "score": 0.549,
+          "preview": "or other Contract relating to an Acquisition Transaction, other than an Acceptable Confidentiality Agreement (any such letter of intent, memorandum of understan"
+        },
+        {
+          "chunk_id": "msft_activision__merger_agreement__60",
+          "doc_id": "merger_agreement",
+          "score": 0.548,
+          "preview": "JV Entities \u201d) shall not be deemed to be Subsidiaries of the Company, except that with respect to the definition of Company Material Adverse Effect, representat"
+        }
+      ]
+    },
+    {
+      "id": "stockholder_vote",
+      "category": "clause",
+      "rank": 4,
+      "retrieved": 20,
+      "top": [
+        {
+          "chunk_id": "msft_activision__merger_agreement__230",
+          "doc_id": "merger_agreement",
+          "score": 0.695,
+          "preview": "is no financial advisor, investment banker, broker, finder, agent or other Person that has been retained by or is authorized to act on behalf of Parent, Merger "
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__855",
+          "doc_id": "proxy_statement",
+          "score": 0.691,
+          "preview": "4.7 Brokers . There is no financial advisor, investment banker, broker, finder, agent or other Person that has been retained by or is authorized to act on behal"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__9",
+          "doc_id": "proxy_statement",
+          "score": 0.688,
+          "preview": "If you hold your shares in \u201cstreet name,\u201d you should instruct your broker, bank or other nominee how to vote your shares in accordance with the voting instructi"
+        }
+      ]
+    },
+    {
+      "id": "financing_condition",
+      "category": "clause",
+      "rank": 8,
+      "retrieved": 19,
+      "top": [
+        {
+          "chunk_id": "msft_activision__proxy_statement__278",
+          "doc_id": "proxy_statement",
+          "score": 0.789,
+          "preview": "the Merger\u201d beginning on page 88 and \u201cTerms of the Merger Agreement \u2014 Reverse Termination Fee\u201d beginning on page 93 . The merger agreement also provides an appr"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__481",
+          "doc_id": "proxy_statement",
+          "score": 0.695,
+          "preview": "to specified exceptions and qualifications contained in the merger agreement, as well as certain additional exceptions included in the confidential disclosure l"
+        },
+        {
+          "chunk_id": "msft_activision__proxy_statement__276",
+          "doc_id": "proxy_statement",
+          "score": 0.688,
+          "preview": "or waived. \u200b \u2022 Regulatory Approvals . The fact that the merger agreement requires that Microsoft use its reasonable best efforts to take certain actions necessa"
+        }
+      ]
+    }
+  ]
+}

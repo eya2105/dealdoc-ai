@@ -1,0 +1,29 @@
+{
+  "deal_id": "msft_activision",
+  "expected": {
+    "deal_value": [
+      "95.00"
+    ],
+    "buyer": [
+      "Microsoft"
+    ],
+    "target": [
+      "Activision Blizzard"
+    ],
+    "merger_agreement_date": [
+      "January 18, 2022"
+    ],
+    "target_financial_advisor": [
+      "Allen"
+    ],
+    "buyer_financial_advisor": [
+      "Goldman Sachs"
+    ],
+    "company_termination_fee": [
+      "2,270,100,000"
+    ],
+    "initial_termination_date": [
+      "January 18, 2023"
+    ]
+  }
+}

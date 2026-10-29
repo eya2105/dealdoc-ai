@@ -57,14 +57,6 @@ main.py (routes) -> service.py (RagService: the use cases)
                                         GroqLLM, ChromaStore
 container.py builds the real objects (the only place that knows which ones)
 ```
-
-- **Dependency inversion and injection.** `Retriever`, `Extractor`, `Ingestor`... receive their collaborators in the constructor and only know the `Protocol`s in `ports.py`. Replacing Groq by a local model, or Chroma by another database, means writing one adapter and changing `container.py`.
-- **Single responsibility.** Parsing, chunking, embedding, storage, retrieval, generation, extraction and HTTP are separate modules. Routes only parse requests and map errors to status codes.
-- **Open for extension.** `Ingestor` takes the parser and the chunking strategy as arguments, so a new format or a section-aware chunker is a new function, not an edit.
-- **Interface segregation.** Search and write (`VectorIndex`) are separate from catalog queries (`DocumentCatalog`).
-- **DRY.** One metadata filter builder (`build_where`), one way to call the LLM (`GroqLLM._create`), one retrieval path shared by Q&A, extraction and the evaluation scripts.
-- **Testability.** Tests use hand-written fakes (`tests/fakes.py`) through the real wiring (`build_container(...)`): no monkeypatching, no model, no API key, real Chroma on a temp directory.
-
 ## Project structure
 
 ```

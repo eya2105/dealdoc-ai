@@ -1,9 +1,8 @@
 from typing import Optional
 
-from config import TOP_K, MAX_TOP_K, CANDIDATES_PER_QUERY
-from embeddings import embed_query
-from llm import call_llm_json
-from store import get_collection
+from config import (CANDIDATES_PER_QUERY, MAX_TOP_K, QUERY_EXPANSION_ENABLED,
+                    RERANK_ENABLED, RERANK_POOL, TOP_K)
+from ports import LLM, Chunk, Embedder, Reranker, VectorIndex
 
 EXPAND_SYSTEM_PROMPT = (
     "You rewrite user questions for a legal document search engine. "
@@ -13,58 +12,67 @@ EXPAND_SYSTEM_PROMPT = (
 )
 
 
-def expand_query(question: str) -> list[str]:
-    """Generate alternative phrasings to improve retrieval recall.
-    A single question often misses relevant chunks because the
-    embedding model matches on surface similarity. By generating
-    2-3 rephrased variants, we cast a wider net.
+class Retriever:
+    """Semantic search: [query expansion] -> vector candidates -> [cross-encoder rerank].
+
+    It depends only on ports (VectorIndex, Embedder, LLM, Reranker), never on a concrete library.
     """
-    data = call_llm_json(EXPAND_SYSTEM_PROMPT, question, temperature=0.3)
-    if not data:
-        return []
-    return data.get("queries", [])
 
+    def __init__(self, index: VectorIndex, embedder: Embedder, llm: LLM, reranker: Reranker, *,
+                 rerank_enabled: bool = RERANK_ENABLED,
+                 expansion_enabled: bool = QUERY_EXPANSION_ENABLED,
+                 candidates_per_query: int = CANDIDATES_PER_QUERY,
+                 rerank_pool: int = RERANK_POOL,
+                 max_top_k: int = MAX_TOP_K):
+        self._index, self._embedder, self._llm, self._reranker = index, embedder, llm, reranker
+        self._rerank_enabled = rerank_enabled
+        self._expansion_enabled = expansion_enabled
+        self._candidates_per_query = candidates_per_query
+        self._rerank_pool = rerank_pool
+        self._max_top_k = max_top_k
 
-def retrieve(query: str, top_k: int = TOP_K,
-             deal_id: Optional[str] = None) -> list[dict]:
-    """Semantic search with multi-query expansion.
-    1. Generate 2-3 query variants via LLM
-    2. Embed each variant and retrieve candidates from ChromaDB
-    3. Deduplicate by chunk_id, keep the best score per chunk
-    4. Sort by score descending, return top_k
-    """
-    top_k = max(1, min(top_k, MAX_TOP_K))
-    collection = get_collection()
-    where_filter = {"deal_id": deal_id} if deal_id else None
+    def expand_query(self, question: str) -> list[str]:
+        """Generate alternative phrasings to improve retrieval recall (one LLM call)."""
+        data = self._llm.complete_json(EXPAND_SYSTEM_PROMPT, question, temperature=0.3)
+        if not data:
+            return []
+        variants = data.get("queries", [])
+        return [q for q in variants if isinstance(q, str) and q.strip()][:3]
 
-    # Build list of queries: original + expanded variants
-    variants = expand_query(query)
-    queries = [query] + variants
+    def _candidates(self, queries: list[str], deal_id: Optional[str], doc_id: Optional[str],
+                    n_results: int) -> list[Chunk]:
+        """One batched search; dedupe by chunk_id keeping the best score; sorted best-first."""
+        per_query = self._index.search(self._embedder.embed(queries), n_results, deal_id, doc_id)
+        best: dict[str, Chunk] = {}
+        for chunks in per_query:
+            for chunk in chunks:
+                if chunk["chunk_id"] not in best or chunk["score"] > best[chunk["chunk_id"]]["score"]:
+                    best[chunk["chunk_id"]] = chunk
+        return sorted(best.values(), key=lambda c: c["score"], reverse=True)
 
-    # Retrieve candidates for each query, deduplicate by chunk_id
-    seen: dict[str, dict] = {}
-    for q in queries:
-        results = collection.query(
-            query_embeddings=[embed_query(q)],
-            n_results=CANDIDATES_PER_QUERY,
-            where=where_filter,
-            include=["documents", "metadatas", "distances"],
-        )
+    def retrieve(self, query: str,
+                 top_k: int = TOP_K,
+                 deal_id: Optional[str] = None,
+                 doc_id: Optional[str] = None,
+                 expand: Optional[bool] = None,
+                 rerank: Optional[bool] = None,
+                 pool: Optional[int] = None) -> list[Chunk]:
+        """Best `top_k` chunks for `query`.
 
-        for i in range(len(results["ids"][0])):
-            chunk_id = results["ids"][0][i]
-            distance = results["distances"][0][i]
+        `expand`: add LLM-written query variants (one extra LLM call); None = constructor default.
+        `rerank`: re-score the best candidates with the cross-encoder; None = constructor default.
+        `pool`:   how many candidates to fetch per query AND hand to the reranker
+                  (default: candidates_per_query / rerank_pool). Extraction uses a deeper one.
+        Results always carry `score` (cosine); reranked ones also carry `rerank_score`.
+        """
+        top_k = max(1, min(top_k, self._max_top_k))
+        use_rerank = self._rerank_enabled if rerank is None else rerank
+        use_expand = self._expansion_enabled if expand is None else expand
 
-            # Keep the chunk with the best (lowest) distance
-            if chunk_id not in seen or distance < seen[chunk_id]["distance"]:
-                seen[chunk_id] = {
-                    "chunk_id": chunk_id,
-                    "text": results["documents"][0][i],
-                    "distance": distance,
-                    "score": 1 - distance,
-                    "metadata": results["metadatas"][0][i],
-                }
+        queries = [query] + (self.expand_query(query) if use_expand else [])
+        candidates = self._candidates(queries, deal_id, doc_id, pool or self._candidates_per_query)
 
-    # Sort by similarity score descending, take top_k
-    ranked = sorted(seen.values(), key=lambda x: x["score"], reverse=True)
-    return ranked[:top_k]
+        if use_rerank:
+            # rerank against the ORIGINAL question, not the LLM variants
+            return self._reranker.rerank(query, candidates[:pool or self._rerank_pool], top_k)
+        return candidates[:top_k]

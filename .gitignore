@@ -2,7 +2,9 @@
 chroma_deals/
 uploads/
 __pycache__/
+.pytest_cache/
 myenv/
+.venv/
 *.pyc
 .vscode/
 .idea/
